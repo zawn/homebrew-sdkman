@@ -1,8 +1,8 @@
 class Lcm < Formula
   desc "Libraries and tools for message passing and data marshalling"
   homepage "https://lcm-proj.github.io/"
-  url "https://github.com/lcm-proj/lcm/archive/refs/tags/v1.5.1.tar.gz"
-  sha256 "40ba0b7fb7c9ad06d05e06b4787d743cf11be30eb4f1a03abf4a92641c5b1203"
+  url "https://github.com/lcm-proj/lcm/archive/refs/tags/v1.5.2.tar.gz"
+  sha256 "d443261619080f1c0693237b2019436988e1b2b2ba5fc09a49bf23769e1796de"
   license "LGPL-2.1-or-later"
   head "https://github.com/lcm-proj/lcm.git", branch: "master"
 
@@ -12,14 +12,12 @@ class Lcm < Formula
   end
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any,                 arm64_sequoia: "cd5794313c2136f837cc4235fedc5bcb6dfa1300cc3a5d9524a0346c1e91bd97"
-    sha256 cellar: :any,                 arm64_sonoma:  "adb6c73895ff02cd561aea543e2fbd756d7aa2205237dbad6138c4516c34d6ad"
-    sha256 cellar: :any,                 arm64_ventura: "000805ebd7cd74df1f20575e964a84a1e671c110861a0c94e09a47b417cf2818"
-    sha256 cellar: :any,                 sonoma:        "3caf4d4ac4e480add5a3b74601a7be8d6c7d9f455eb2ddfede706614e30ded77"
-    sha256 cellar: :any,                 ventura:       "231e26c5826e2ae3f6c5cf0725d45f21e7a49a88a39f5a3bcc8f058003d185b2"
-    sha256 cellar: :any_skip_relocation, arm64_linux:   "ee71ab26af0ccabb7cd2a7b6648d9307293e6e72af5b061312cd49a7ea6c1375"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "a73f26e38bef338372062dbc93ac8d69bd1fc27fe6df22e7d67c05d0cbc97023"
+    sha256 cellar: :any,                 arm64_tahoe:   "a0820b5805c1dc9787283af4bd977504bc3431fa6e7685a21e1778478b231bf8"
+    sha256 cellar: :any,                 arm64_sequoia: "350e2c304a9436ef574780ade663d065799462371d33fda7d130c364f1c65e90"
+    sha256 cellar: :any,                 arm64_sonoma:  "8189eb0848a56d7387dd4b722d068caa11b830495db510be29b559e481e58e2b"
+    sha256 cellar: :any,                 sonoma:        "6a23eae035e3467c83d90580e1dd30eb88272a504ef60016d49fe805340de6a0"
+    sha256 cellar: :any_skip_relocation, arm64_linux:   "7cf043230b6efeca9f96c6bfc076905ccb20227408bd5a88490b7dc9ebf9eb23"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "1f2d9a79b688298ec1f01703856bf0a70e2cbf74793aea29b754b546a698df6c"
   end
 
   depends_on "cmake" => :build
@@ -27,10 +25,10 @@ class Lcm < Formula
   depends_on "glib"
   depends_on "lua"
   # depends_on "openjdk"
-  depends_on "python@3.13"
+  depends_on "python@3.14"
 
   def python3
-    which("python3.13")
+    which("python3.14")
   end
 
   def install
