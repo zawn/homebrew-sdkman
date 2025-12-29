@@ -4,27 +4,15 @@ class MariadbAT105 < Formula
   url "https://archive.mariadb.org/mariadb-10.5.29/source/mariadb-10.5.29.tar.gz"
   sha256 "de49ed417f6fa90e8fee72a41e526e0983dc47f388caff9e703803cec263b826"
   license "GPL-2.0-only"
-
-  livecheck do
-    url "https://downloads.mariadb.org/rest-api/mariadb/all-releases/?olderReleases=false"
-    strategy :json do |json|
-      json["releases"]&.map do |release|
-        next unless release["release_number"]&.start_with?(version.major_minor)
-        next if release["status"] != "stable"
-
-        release["release_number"]
-      end
-    end
-  end
+  revision 1
 
   bottle do
-    sha256 arm64_sequoia: "fbc6c60828c5b08de909657354aa0ae4b61ed7016e16fe3cb0ba0202f761a163"
-    sha256 arm64_sonoma:  "4d82bc0d05b270c8d6b1aff58a8303b9eaaa694c4c6d99ffb3f980dd95a9ad6e"
-    sha256 arm64_ventura: "b639bb146a4e838d542810b16b2fe090b5223428d1d832e7bca6afdf0a976555"
-    sha256 sonoma:        "9820c413100a32e67e7efb0027a18b8a314eedd15dcd7fb6bb91b34c3fdef322"
-    sha256 ventura:       "12ef4bda287ca4dde510dbb1cee7ebddc8abdf8f2117fcc8f37cb23263d21015"
-    sha256 arm64_linux:   "50752547002571ba3b54aa3624e7ac74b8d3a514b9a23513c6c3e27336c6b64b"
-    sha256 x86_64_linux:  "a35b606e2aac03025965c0ac65a7894de48d6c1eb94e9786c60cc5ac3f9514db"
+    sha256 arm64_tahoe:   "bc104c240968345cb39f6f28716a9606704026b37e81f4d92a54d7f69b693f36"
+    sha256 arm64_sequoia: "a8c6bb26de1fa94be3319d9e32b63205f9078434ec2145badb5cdc6451f58f27"
+    sha256 arm64_sonoma:  "99dbfbbfc02759cf586a05e520b678474e435051d386a2e7108788fe07c5b14f"
+    sha256 sonoma:        "2cac55d9ca509a3890b79c0e62da52e8bf3e58f6c1c36ae004cb26d2d7868255"
+    sha256 arm64_linux:   "0204f343319fad14bce41fd8dd9f5b3cd0cee41a3a621739688505cf51b09acf"
+    sha256 x86_64_linux:  "30f00c3ccee22cabe5493f6db392178d09a0b6e17e10f3d010bd40dc14f242a8"
   end
 
   keg_only :versioned_formula
@@ -32,6 +20,7 @@ class MariadbAT105 < Formula
   # See: https://mariadb.com/kb/en/changes-improvements-in-mariadb-105/
   # End-of-life on 2025-06-24: https://mariadb.org/about/#maintenance-policy
   deprecate! date: "2025-06-24", because: :unsupported
+  disable! date: "2026-06-24", because: :unsupported
 
   depends_on "bison" => :build
   depends_on "cmake" => :build
