@@ -1,26 +1,21 @@
 class Liquibase < Formula
   desc "Library for database change tracking"
   homepage "https://www.liquibase.org/"
+  # NOTE: Do not bump to v5.0.0+ as license changed to FSL-1.1-ALv2
   url "https://github.com/liquibase/liquibase/releases/download/v4.33.0/liquibase-4.33.0.tar.gz"
   sha256 "689acfcdc97bad0d4c150d1efab9c851e251b398cb3d6326f75e8aafe40ed578"
   license "Apache-2.0"
   revision 1
 
   livecheck do
-    url :stable
-    strategy :github_latest
+    url "https://github.com/liquibase/liquibase.git"
+    regex(/^v?(4(?:\.\d+)+)$/i)
+    strategy :github_releases
   end
 
-  no_autobump! because: :requires_manual_review
-
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "222519225b5374762241360ed0c6720d11f31a6b996c2df9268fe321bf7917aa"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "222519225b5374762241360ed0c6720d11f31a6b996c2df9268fe321bf7917aa"
-    sha256 cellar: :any_skip_relocation, arm64_ventura: "222519225b5374762241360ed0c6720d11f31a6b996c2df9268fe321bf7917aa"
-    sha256 cellar: :any_skip_relocation, sonoma:        "7181fa982b8c07cdc61e486770ea6f0f12b642eb4a85c9f01bf9e4a8bf764e0e"
-    sha256 cellar: :any_skip_relocation, ventura:       "7181fa982b8c07cdc61e486770ea6f0f12b642eb4a85c9f01bf9e4a8bf764e0e"
-    sha256 cellar: :any_skip_relocation, arm64_linux:   "222519225b5374762241360ed0c6720d11f31a6b996c2df9268fe321bf7917aa"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "222519225b5374762241360ed0c6720d11f31a6b996c2df9268fe321bf7917aa"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, all: "222519225b5374762241360ed0c6720d11f31a6b996c2df9268fe321bf7917aa"
   end
 
   # depends_on "openjdk"
