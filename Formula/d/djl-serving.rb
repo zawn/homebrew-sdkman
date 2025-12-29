@@ -1,19 +1,22 @@
 class DjlServing < Formula
   desc "This module contains an universal model serving implementation"
   homepage "https://github.com/deepjavalibrary/djl-serving"
-  url "https://publish.djl.ai/djl-serving/serving-0.33.0.tar"
-  sha256 "48326bdeacba973ac54d8f07e22b6be0a0edafe2e1377d7031665d5efe726691"
+  url "https://publish.djl.ai/djl-serving/serving-0.36.0.tar"
+  sha256 "f91e90522f38a8c86172c34620d88202e7222233804a240f05d10c51b72085c0"
   license "Apache-2.0"
 
   # `djl-serving` versions aren't considered released until a corresponding
   # release is created in the main `deepjavalibrary/djl` repository.
   livecheck do
-    url "https://github.com/deepjavalibrary/djl"
-    strategy :github_latest
+    url "https://docs.djl.ai/versions.json"
+    regex(/^v?(\d+(?:\.\d+)+)$/i)
+    strategy :json do |json, regex|
+      json.map { |item| item["version"]&.[](regex, 1) }
+    end
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "9d0f31ed27572681ddd8cc68ecb6396fd1697ad89cd56bec21fa22f8f3017a38"
+    sha256 cellar: :any_skip_relocation, all: "a85ddef0f4af5264220c18c66092e069826eb427248dd5821dae801499e54edb"
   end
 
   # depends_on "openjdk"
@@ -23,13 +26,14 @@ class DjlServing < Formula
     rm_r(Dir["bin/*.bat"])
     mv "bin/serving", "bin/djl-serving"
     libexec.install Dir["*"]
-    env = { MODEL_SERVER_HOME: "${MODEL_SERVER_HOME:-#{var}}" }
+    env = { MODEL_SERVER_HOME: "${MODEL_SERVER_HOME:-#{var}/djl-serving}" }
     env.merge!(Language::Java.overridable_java_home_env)
     (bin/"djl-serving").write_env_script "#{libexec}/bin/djl-serving", env
   end
 
   service do
     run [opt_bin/"djl-serving", "run"]
+    working_dir var/"djl-serving"
     keep_alive true
   end
 
