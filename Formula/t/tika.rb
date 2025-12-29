@@ -1,24 +1,29 @@
 class Tika < Formula
   desc "Content analysis toolkit"
   homepage "https://tika.apache.org/"
-  url "https://www.apache.org/dyn/closer.lua?path=tika/3.2.1/tika-app-3.2.1.jar"
-  mirror "https://archive.apache.org/dist/tika/3.2.1/tika-app-3.2.1.jar"
-  sha256 "268512b774a7a30e26ac1d6e3e5f7982cf6203a9822d4563be37b1922365d108"
+  url "https://www.apache.org/dyn/closer.lua?path=tika/3.2.3/tika-app-3.2.3.jar"
+  mirror "https://archive.apache.org/dist/tika/3.2.3/tika-app-3.2.3.jar"
+  sha256 "80c20c085e2c0976bbd55969e5bf90dda2b7155db31068639fbc871d0369e7e7"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "9f9d786884111b091cf81347b58dbc73054d9e369fc41bacff434a41933f220b"
+    sha256 cellar: :any_skip_relocation, all: "16c85f0ebf19e98b151a9f7885619440592718925034cc969536ade1805bdea4"
   end
 
   # depends_on "openjdk"
 
   resource "server" do
-    url "https://www.apache.org/dyn/closer.lua?path=tika/3.2.1/tika-server-standard-3.2.1.jar"
-    mirror "https://archive.apache.org/dist/tika/3.2.1/tika-server-standard-3.2.1.jar"
-    sha256 "383a8a99ec886ea95e4143bfe200208afe1884db14b4c1e470950edec82d2c5d"
+    url "https://www.apache.org/dyn/closer.lua?path=tika/3.2.3/tika-server-standard-3.2.3.jar"
+    mirror "https://archive.apache.org/dist/tika/3.2.3/tika-server-standard-3.2.3.jar"
+    sha256 "c00898065af088925ba4b65856db66e6140e4c750d28219b61b96885885e7593"
+
+    livecheck do
+      formula :parent
+    end
   end
 
   def install
+    odie "update `server` resource" if version != resource("server").version
     libexec.install "tika-app-#{version}.jar"
     bin.write_jar_script libexec/"tika-app-#{version}.jar", "tika"
 
@@ -28,11 +33,10 @@ class Tika < Formula
 
   service do
     run [opt_bin/"tika-rest-server"]
-    working_dir HOMEBREW_PREFIX
+    working_dir var/"tika"
   end
 
   test do
-    assert_match version.to_s, resource("server").version.to_s, "server resource out of sync with formula"
     pdf = test_fixtures("test.pdf")
     assert_equal "application/pdf\n", shell_output("#{bin}/tika --detect #{pdf}")
 
