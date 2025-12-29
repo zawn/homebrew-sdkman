@@ -1,20 +1,19 @@
 class JavaServiceWrapper < Formula
   desc "Simplify the deployment, launch and monitoring of Java applications"
   homepage "https://wrapper.tanukisoftware.com/"
-  url "https://downloads.sourceforge.net/project/wrapper/wrapper_src/Wrapper_3.6.2_20250605/wrapper_3.6.2_src.tar.gz"
-  sha256 "9adec5e1786d1ca50c1e2ff300f01b54a1fa4fbe631fd7512e096f7db4a9cddd"
+  url "https://downloads.sourceforge.net/project/wrapper/wrapper_src/Wrapper_3.6.4_20251218/wrapper_3.6.4_src.tar.gz"
+  sha256 "fb22e05d89f0a6a12bcd5fd8d4742ab42cbfba5324e367a87810a6a67f595a12"
   license any_of: ["GPL-2.0-only", "GPL-3.0-only"]
 
   no_autobump! because: :incompatible_version_format
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "bbab0b6ad974b3224734d45f8f8c324c50f5818edf966477b4285a0f2e13992a"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "dcdd6d00deb470d7a8542ba65fe84a4b78222aca65f0a0137cff5a7ff3dc94af"
-    sha256 cellar: :any_skip_relocation, arm64_ventura: "22e80ccd9a12fcacaec00a9359ddaf7c58bc936dd0aa0042ef25eac46fd2e1b2"
-    sha256 cellar: :any_skip_relocation, sonoma:        "05bf4b4b9aa43398feb1a0d8ff24d1c259c8158914044d1f78bf0441f1533973"
-    sha256 cellar: :any_skip_relocation, ventura:       "8ef9ed8518305d3d2d5dd6a6ad3a78f0db279256c393f8b36cf5b6642ff41c26"
-    sha256 cellar: :any_skip_relocation, arm64_linux:   "6225995f4c1519f54f1987c72c9388b70a9c4e003443594c42d1e188be3dcf2c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "f6f282b50f8c2c2339db931a68ce8b7148f077c754ecff2934a1d05ed76c4a94"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "50f02c8a22fd1aaf7fdaaa368d6157331857801e0e7bf9a37d650b1221186232"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "b470ea97a958934558739c40336c45903e533376b0273e51c6267fd4e9a7d953"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "a70b5e29df4af3c8c06ab23e6b116bec094a27a5fe5f07d0c0874aaaa3cb8514"
+    sha256 cellar: :any_skip_relocation, sonoma:        "191cce9ca2610ecd1e78bb8adecd93c4a0cecd7a944d45fba843e86d6ea84062"
+    sha256 cellar: :any_skip_relocation, arm64_linux:   "609f36514596c3655739cbe1e39fbd842c0da0fd4b8a5cdcf9be41816283ecbf"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "91b2cc21432a561472471c185e163d99786e0e299e7933dc039656939c27ab16"
   end
 
   depends_on "ant" => :build
