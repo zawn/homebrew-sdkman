@@ -1,9 +1,9 @@
 class Maven < Formula
   desc "Java-based project management"
   homepage "https://maven.apache.org/"
-  url "https://www.apache.org/dyn/closer.lua?path=maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz"
-  mirror "https://archive.apache.org/dist/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz"
-  sha256 "4b7195b6a4f5c81af4c0212677a32ee8143643401bc6e1e8412e6b06ea82beac"
+  url "https://www.apache.org/dyn/closer.lua?path=maven/maven-3/3.9.12/binaries/apache-maven-3.9.12-bin.tar.gz"
+  mirror "https://archive.apache.org/dist/maven/maven-3/3.9.12/binaries/apache-maven-3.9.12-bin.tar.gz"
+  sha256 "fa2c9948729296c23afd18fd01a90f62cdda09a46191b54a8bc3764c2eee812e"
   license "Apache-2.0"
 
   livecheck do
@@ -12,18 +12,12 @@ class Maven < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "3df41d8dabb7efb60d594a017b6c6538298769ee86c23eb8762e8deec2c2a371"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "3df41d8dabb7efb60d594a017b6c6538298769ee86c23eb8762e8deec2c2a371"
-    sha256 cellar: :any_skip_relocation, arm64_ventura: "3df41d8dabb7efb60d594a017b6c6538298769ee86c23eb8762e8deec2c2a371"
-    sha256 cellar: :any_skip_relocation, sonoma:        "27f8ce0143af983a18708027013a5fc98b9dce8b4ab6d4850ee8c9ab64a5a5b2"
-    sha256 cellar: :any_skip_relocation, ventura:       "27f8ce0143af983a18708027013a5fc98b9dce8b4ab6d4850ee8c9ab64a5a5b2"
-    sha256 cellar: :any_skip_relocation, arm64_linux:   "3df41d8dabb7efb60d594a017b6c6538298769ee86c23eb8762e8deec2c2a371"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "3df41d8dabb7efb60d594a017b6c6538298769ee86c23eb8762e8deec2c2a371"
+    sha256 cellar: :any_skip_relocation, all: "aee06a657afd6f9c20b4183c0c8e90325dfc29c75f300eaf22556852e58d4676"
   end
 
   # depends_on "openjdk"
 
-  conflicts_with "mvnvm", because: "also installs a 'mvn' executable"
+  conflicts_with "mvnvm", because: "both install `mvn` executables"
 
   def install
     # Remove windows files
@@ -33,6 +27,10 @@ class Maven < Formula
     chmod 0644, "conf/settings.xml"
 
     libexec.install Dir["*"]
+
+    # Build an `:all` bottle by changing the path for `mavenrc`
+    file = libexec/"bin/mvn"
+    inreplace file, "/usr/local/etc/mavenrc", "#{HOMEBREW_PREFIX}/etc/mavenrc"
 
     # Leave conf file in libexec. The mvn symlink will be resolved and the conf
     # file will be found relative to it
