@@ -7,6 +7,7 @@ class Ipopt < Formula
   head "https://github.com/coin-or/Ipopt.git", branch: "stable/3.14"
 
   bottle do
+    sha256 cellar: :any,                 arm64_tahoe:   "94e96fc9b70faed386353442a5dbd7eb65cbca7d2eedb0d114d81781c3346702"
     sha256 cellar: :any,                 arm64_sequoia: "847ce7b7dcfa69ea27a65ea01ac98cbe63d211d93b3075d44c75074824ac6c0c"
     sha256 cellar: :any,                 arm64_sonoma:  "1f471be987f9e4a2b010f555ae5b9b06c5177feb05932e83814355534695f8ef"
     sha256 cellar: :any,                 arm64_ventura: "ba168fca35523f7b6b75b04704fb22df58cc0ca2009a61e0de09647867ad7239"
@@ -31,7 +32,7 @@ class Ipopt < Formula
     patch do
       # MUMPS does not provide a Makefile.inc customized for macOS.
       on_macos do
-        url "https://raw.githubusercontent.com/Homebrew/formula-patches/ab96a8b8e510a8a022808a9be77174179ac79e85/ipopt/mumps-makefile-inc-generic-seq.patch"
+        url "https://raw.githubusercontent.com/Homebrew/homebrew-core/1cf441a0/Patches/ipopt/mumps-makefile-inc-generic-seq.patch"
         sha256 "0c570ee41299073ec2232ad089d8ee10a2010e6dfc9edc28f66912dae6999d75"
       end
 
