@@ -1,8 +1,8 @@
 class Igv < Formula
   desc "Interactive Genomics Viewer"
   homepage "https://igv.org/doc/desktop/"
-  url "https://data.broadinstitute.org/igv/projects/downloads/2.19/IGV_2.19.5.zip"
-  sha256 "0b5f542b3639552d4f01fa3dda78ffffc77fa137fd72fe8bcf583ed4b51b03f0"
+  url "https://data.broadinstitute.org/igv/projects/downloads/2.19/IGV_2.19.7.zip"
+  sha256 "692ae6c3037a6633c33afdbbe960a715f537173f26a16f56a58cb9ccbe163e9f"
   license "MIT"
 
   livecheck do
@@ -11,7 +11,7 @@ class Igv < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "7f637e64cc7e117ea087c98ff6ad701d992d75c057e208e4bf60655da0ba3ad8"
+    sha256 cellar: :any_skip_relocation, all: "23c89e905e0e048e3bfbf3a7fe26ab96df8591a241be76b1ffd159fd9f0e193a"
   end
 
   # depends_on "openjdk"
