@@ -1,19 +1,18 @@
 class ScalaAT213 < Formula
   desc "JVM-based programming language"
   homepage "https://www.scala-lang.org/"
-  url "https://downloads.lightbend.com/scala/2.13.16/scala-2.13.16.tgz"
-  mirror "https://www.scala-lang.org/files/archive/scala-2.13.16.tgz"
-  mirror "https://downloads.typesafe.com/scala/2.13.16/scala-2.13.16.tgz"
-  sha256 "937f743be315302caad15be99ab1ca425ff7e63f15ef5790db6c81bb49543256"
+  url "https://github.com/scala/scala/releases/download/v2.13.18/scala-2.13.18.tgz"
+  mirror "https://www.scala-lang.org/files/archive/scala-2.13.18.tgz"
+  sha256 "1834d09fd5c78ec77e9a933ab76c724280a8ec9595a332a6112823787a9ac3e6"
   license "Apache-2.0"
 
   livecheck do
-    url "https://www.scala-lang.org/files/archive/"
-    regex(/href=.*?scala[._-]v?(2\.13(?:\.\d+)+)(?:[._-]final)?\.t/i)
+    url "https://www.scala-lang.org/download/"
+    regex(%r{href=.*?download/v?(2\.13(?:\.\d+)+)\.html}i)
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "7095101fa3ff5a8bef712c14a3fde138274e2765afb17b33d447a0e4eb33c966"
+    sha256 cellar: :any_skip_relocation, all: "fc08a8e336f2e0831bf8d503c433521ec43a3021072682b4c8e41006162c75da"
   end
 
   keg_only :versioned_formula
@@ -21,8 +20,6 @@ class ScalaAT213 < Formula
   # depends_on "openjdk"
 
   def install
-    # Replace `/usr/local` references for uniform bottles
-    inreplace Dir["man/man1/scala{,c}.1"], "/usr/local", HOMEBREW_PREFIX
     rm Dir["bin/*.bat"]
     doc.install (buildpath/"doc").children
     share.install "man"
