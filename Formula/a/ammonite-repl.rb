@@ -1,9 +1,9 @@
 class AmmoniteRepl < Formula
   desc "Ammonite is a cleanroom re-implementation of the Scala REPL"
   homepage "https://ammonite.io/"
-  url "https://github.com/com-lihaoyi/Ammonite/releases/download/3.0.2/3.3-3.0.2"
-  version "3.0.2"
-  sha256 "3353e0f87b164a493ad0d5333505f13a28e77c5c57e628daa3be8f85acfbca44"
+  url "https://github.com/com-lihaoyi/Ammonite/releases/download/3.0.6/3.3-3.0.6"
+  version "3.0.6"
+  sha256 "0be4a18ee17512717be5c0cdd28dbcabc01fc3bc30a1de0452c2e47536f9e30a"
   license "MIT"
 
   # There can be a gap between when a GitHub release is created and when the
@@ -16,7 +16,7 @@ class AmmoniteRepl < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "a78817794763be017ec9dc58b4fa4956658265675094f317219b57594e50c7be"
+    sha256 cellar: :any_skip_relocation, all: "e5678d8171e2eb9e69a4df99fe1e7acd75be73a0efe5f7e9a85735db70efc10b"
   end
 
   # depends_on "openjdk"
