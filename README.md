@@ -33,9 +33,10 @@ brew install zawn/nojdk/tomcat
 ### 3. 如何验证？
 安装完成后，执行以下命令：
 ```bash
-brew info maven
+# 检查是否安装了官方 openjdk (预期应为未安装)
+brew list openjdk
 ```
-如果看到 `From: https://github.com/zawn/homebrew-nojdk/...`，说明安装成功。
+如果看到没有安装openjdk就说明成功了
 
 ---
 
