@@ -1,0 +1,51 @@
+name: Sync from Homebrew Core
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天北京时间上午 8 点运行
+  workflow_dispatch:      # 允许手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 克隆你自己的仓库到 homebrew-sdkman 文件夹
+      - name: Checkout SDKMAN Tap
+        uses: actions/checkout@v4
+        with:
+          path: homebrew-sdkman
+
+      # 2. 克隆官方 Core 到 homebrew-core 文件夹
+      - name: Checkout Homebrew Core
+        uses: actions/checkout@v4
+        with:
+          repository: Homebrew/homebrew-core
+          path: homebrew-core
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # 3. 运行 Python 脚本
+      - name: Run Sync Script
+        run: |
+          python homebrew-sdkman/.github/scripts/sync.py
+
+      # 4. 提交并推送
+      - name: Push Changes
+        working-directory: homebrew-sdkman
+        run: |
+          # 配置机器人身份
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # 检查是否有文件变动
+          if [ -n "$(git status --porcelain)" ]; then
+            # 脚本内部已经 commit 过了，这里只需要 push
+            # 如果脚本里没 commit，这里可以补一句 git commit -am "Auto-sync"
+            git push
+          else
+            echo "没有发现需要同步的更新。"
+          fi
