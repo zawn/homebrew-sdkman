@@ -69,7 +69,9 @@ def sync_formulae():
                         dst_content = f.read()
                     src_h = get_logic_hash(content)
                     dst_h = get_logic_hash(dst_content)
-                    if is_maven:
+                    # 针对 maven.rb 开启超级追踪
+                    is_maven = "maven.rb" in file_name
+                    if is_maven :
                         print(f"   对比哈希: SRC({src_h}) vs DST({dst_h})")
 
                     if src_h == dst_h:

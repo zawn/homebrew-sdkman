@@ -23,7 +23,7 @@ jobs:
           repository: Homebrew/homebrew-core
           path: homebrew-core
           # fetch-depth: 0 获取完整历史记录，以便 Python 能够抓取每个文件的 git log
-          fetch-depth: 0
+          fetch-depth: 10
 
       - name: Set up Python
         uses: actions/setup-python@v5
