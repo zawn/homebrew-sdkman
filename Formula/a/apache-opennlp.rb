@@ -1,13 +1,15 @@
 class ApacheOpennlp < Formula
   desc "Machine learning toolkit for processing natural language text"
   homepage "https://opennlp.apache.org/"
-  url "https://www.apache.org/dyn/closer.lua?path=opennlp/opennlp-2.5.5/apache-opennlp-2.5.5-bin.tar.gz"
-  mirror "https://archive.apache.org/dist/opennlp/opennlp-2.5.5/apache-opennlp-2.5.5-bin.tar.gz"
-  sha256 "58ddd43e7661bcbd588226e0f82bda7fb7cc700b9c234394ff4445b5e19cabbb"
+  # Switched to official Maven until upstream adds files to Apache server
+  # url "https://www.apache.org/dyn/closer.lua?path=opennlp/opennlp-2.5.6.1/apache-opennlp-2.5.6.1-bin.tar.gz"
+  url "https://search.maven.org/remotecontent?filepath=org/apache/opennlp/opennlp-distr/2.5.7/opennlp-distr-2.5.7-bin.tar.gz"
+  mirror "https://archive.apache.org/dist/opennlp/opennlp-2.5.7/apache-opennlp-2.5.7-bin.tar.gz"
+  sha256 "8de91d4705d2d546986fe4ad4dc6e1d9ed7bfce0ef32340bb0f996eda6787a6f"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "a62387506033649f60c09da3c10df158dff92f7d24ad3f720545e2c52c5ab291"
+    sha256 cellar: :any_skip_relocation, all: "558d1162328b71825c618fec114e8952fbec5c88f4c87ba7a139fb29767ca290"
   end
 
   # depends_on "openjdk"
