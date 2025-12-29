@@ -7,7 +7,7 @@ import re
 # GitHub Actions 会将仓库克隆到当前工作目录下的指定 path
 BASE_DIR = os.getcwd()
 CORE_DIR = os.path.join(BASE_DIR, "homebrew-core")
-SDK_DIR = os.path.join(BASE_DIR, "homebrew-sdkman")
+SDK_DIR = os.path.join(BASE_DIR, "homebrew-nojdk")
 
 # 匹配目标：查找 openjdk 依赖行
 TARGET_DEP = 'depends_on "openjdk"'

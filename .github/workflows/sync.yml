@@ -9,11 +9,11 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      # 第一步：克隆你自己的 homebrew-sdkman 仓库
-      - name: Checkout SDKMAN Tap
+      # 第一步：克隆你自己的 homebrew-nojdk 仓库
+      - name: Checkout nojdk Tap
         uses: actions/checkout@v4
         with:
-          path: homebrew-sdkman
+          path: homebrew-nojdk
           # 必须使用具有写入权限的 token (默认即可)
 
       # 第二步：克隆官方 homebrew-core 仓库
@@ -34,11 +34,11 @@ jobs:
       - name: Run Sync Script
         run: |
           # 运行路径需对应克隆后的相对路径
-          python homebrew-sdkman/.github/scripts/sync.py
+          python homebrew-nojdk/.github/scripts/sync.py
 
       # 第四步：推送更改回 GitHub 仓库
       - name: Push Changes
-        working-directory: homebrew-sdkman
+        working-directory: homebrew-nojdk
         run: |
           # 检查是否有本地新提交需要推送
           # 脚本内部已经执行了 git commit，所以这里只需要判断并 push
