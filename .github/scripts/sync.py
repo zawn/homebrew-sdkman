@@ -20,12 +20,11 @@ def get_logic_hash(content):
     return hashlib.md5(normalized.encode('utf-8')).hexdigest()
 
 def run_command(command, cwd):
-    """执行命令并返回输出，不因非零返回码崩溃"""
+    """执行命令并返回输出"""
     try:
         result = subprocess.run(command, cwd=cwd, capture_output=True, text=True)
-        return result.stdout.strip()
-    except Exception as e:
-        print(f"执行命令出错: {e}")
+        return result.stdout.strip() if result.returncode == 0 else None
+    except:
         return None
 
 def sync_formulae():
@@ -79,29 +78,35 @@ def sync_formulae():
                 # 注意：rel_path 必须是相对于 core 根目录的路径
                 commit_sha = run_command(['git', 'log', '-1', '--format=%h', '--', rel_path], CORE_DIR)
                 commit_msg = run_command(['git', 'log', '-1', '--format=%s', '--', rel_path], CORE_DIR)
+                commit_date = run_command(['git', 'log', '-1', '--format=%ai', '--', rel_path], CORE_DIR)
 
-                # 添加到 SDK 暂存区
+                # Git 暂存与提交
                 run_command(['git', 'add', rel_path], SDK_DIR)
+                diff_check = run_command(['git', 'status', '--porcelain', rel_path], SDK_DIR)
                 
-                # 检查是否有实际变动（防止空提交）
-                status = run_command(['git', 'status', '--porcelain', rel_path], SDK_DIR)
-                if status:
+                if diff_check:
+                    # 构建 Git Commit Message
                     full_msg = (
-                        f"Sync {file_name} from core@{commit_sha or 'unknown'}\n\n"
-                        f"Original: {commit_msg or 'No message'}\n"
-                        f"Action: Auto-commented openjdk dependency."
+                        f"Sync {file_name} from core@{commit_sha}\n\n"
+                        f"Original Log: {commit_msg}\n"
+                        f"Original Date: {commit_date}"
                     )
                     run_command(['git', 'commit', '-m', full_msg], SDK_DIR)
-                    print(f"✅ 已同步并提交: {rel_path}")
+                    
+                    # --- 丰富后的控制台输出 ---
+                    print("-" * 60)
+                    print(f"✅ 已同步: {rel_path}")
+                    print(f"   来源版本: core@{commit_sha}")
+                    print(f"   修改内容: {commit_msg}")
+                    print(f"   原始时间: {commit_date}")
                     sync_count += 1
 
-    print(f"\n✨ 同步任务结束。共更新了 {sync_count} 个组件。")
+    print("-" * 60)
+    if sync_count == 0:
+        print("✨ 所有组件已是最新，无需同步。")
+    else:
+        print(f"🚀 同步完成，本次共更新 {sync_count} 个组件。")
 
 if __name__ == "__main__":
-    # 验证环境
-    if not os.path.exists(SDK_DIR):
-        print(f"❌ 找不到 SDK 目录: {SDK_DIR}")
-    elif not os.path.exists(CORE_DIR):
-        print(f"❌ 找不到 Core 目录: {CORE_DIR}")
-    else:
+    if os.path.exists(SDK_DIR) and os.path.exists(CORE_DIR):
         sync_formulae()
