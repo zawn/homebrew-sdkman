@@ -2,50 +2,49 @@ name: Sync from Homebrew Core
 
 on:
   schedule:
-    - cron: '0 0 * * *' # 每天北京时间上午 8 点运行
-  workflow_dispatch:      # 允许手动触发
+    - cron: '0 0 * * *' # 每天凌晨 (UTC) 自动运行
+  workflow_dispatch:      # 允许手动触发调试
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      # 1. 克隆你自己的仓库到 homebrew-sdkman 文件夹
+      # 第一步：克隆你自己的 homebrew-sdkman 仓库
       - name: Checkout SDKMAN Tap
         uses: actions/checkout@v4
         with:
           path: homebrew-sdkman
+          # 必须使用具有写入权限的 token (默认即可)
 
-      # 2. 克隆官方 Core 到 homebrew-core 文件夹
+      # 第二步：克隆官方 homebrew-core 仓库
       - name: Checkout Homebrew Core
         uses: actions/checkout@v4
         with:
           repository: Homebrew/homebrew-core
           path: homebrew-core
-          fetch-depth: 1
+          # fetch-depth: 0 获取完整历史记录，以便 Python 能够抓取每个文件的 git log
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      # 3. 运行 Python 脚本
+      # 第三步：运行同步脚本
       - name: Run Sync Script
         run: |
+          # 运行路径需对应克隆后的相对路径
           python homebrew-sdkman/.github/scripts/sync.py
 
-      # 4. 提交并推送
+      # 第四步：推送更改回 GitHub 仓库
       - name: Push Changes
         working-directory: homebrew-sdkman
         run: |
-          # 配置机器人身份
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          
-          # 检查是否有文件变动
-          if [ -n "$(git status --porcelain)" ]; then
-            # 脚本内部已经 commit 过了，这里只需要 push
-            # 如果脚本里没 commit，这里可以补一句 git commit -am "Auto-sync"
+          # 检查是否有本地新提交需要推送
+          # 脚本内部已经执行了 git commit，所以这里只需要判断并 push
+          if [ -n "$(git log origin/main..HEAD 2>/dev/null)" ]; then
+            echo "🚀 发现新提交，正在推送到远程仓库..."
             git push
           else
-            echo "没有发现需要同步的更新。"
+            echo "ℹ️ 本地没有新提交，跳过推送。"
           fi
