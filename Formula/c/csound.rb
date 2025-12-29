@@ -2,7 +2,7 @@ class Csound < Formula
   desc "Sound and music computing system"
   homepage "https://csound.com"
   license "LGPL-2.1-or-later"
-  revision 12
+  revision 13
   head "https://github.com/csound/csound.git", branch: "develop"
 
   # Remove `stable` block when patches are no longer needed
@@ -29,21 +29,22 @@ class Csound < Formula
     end
   end
 
+  # Latest version is in beta, e.g. 7.0.0-beta.10
   livecheck do
     url :stable
-    strategy :github_latest
+    regex(/^v?(\d+(?:\.\d+)+)$/i)
+    strategy :github_releases
   end
 
   no_autobump! because: :requires_manual_review
 
   bottle do
-    sha256 arm64_sequoia: "8d4643c7facbb44a86760a6e4aed9c9d8d64693ed974cbab8df35ae34299b7c6"
-    sha256 arm64_sonoma:  "59e91a6e3ceb3e5ce1a2a846643b6e695ba7d45ee1683a4d90922cb0295b2d4d"
-    sha256 arm64_ventura: "924021067daaa589b49dc7d87697c0dcc0354c55ddbf849b5d99f7f8c6d2ff89"
-    sha256 sonoma:        "5bc33817212bf9e58d2110d263038ba087753d934cf1b229892aef0b48a0a903"
-    sha256 ventura:       "9a087479d355399ef4515d10406c0e2852059cb4bb21a6b3a7523cc93a480560"
-    sha256 arm64_linux:   "b8258413994957c8095201a023403318a253eb56bf01ca95afcdd19db88c8e55"
-    sha256 x86_64_linux:  "58d3320da2d409e1f462bf7544c585cd4b4ee3b922fc9b6fbdf8f3b6a8813b2b"
+    sha256 arm64_tahoe:   "1358e7d52d01425eb57d9315f6660ce5c753c4bd6406f1a82fe8b7f3c0645618"
+    sha256 arm64_sequoia: "cd3cceb2b0a1d0556f29d7d71e1aee94a289f61ba25790f9d3f50420502332e1"
+    sha256 arm64_sonoma:  "1c33262915a2133bd0f08611de8aa60326142b12ca81834bd926fa9af2820a77"
+    sha256 sonoma:        "52d703b25a4e5ccd9e83cbd68ee8ba290c7da2d4ba41371c07c287dcb2abdcf3"
+    sha256 arm64_linux:   "38cc39a0d24c0d44b6f0393b29a49409c728a3c3ecfcce8a7f0e2ec3640a06d8"
+    sha256 x86_64_linux:  "edd32b95ddd140f4395155849cd24344489991ee377526b80f8e7a9a3b117204"
   end
 
   depends_on "asio" => :build
@@ -67,7 +68,7 @@ class Csound < Formula
   depends_on "openssl@3"
   depends_on "portaudio"
   depends_on "portmidi"
-  depends_on "python@3.13"
+  depends_on "python@3.14"
   depends_on "stk"
   depends_on "wiiuse"
 
@@ -97,6 +98,9 @@ class Csound < Formula
       url "https://github.com/csound/plugins/commit/13800c4dd58e3c214e5d7207180ad7115b4e2f27.patch?full_index=1"
       sha256 "e088cc300845408f3956f070fa34a900b700c7860678bc6d37f7506d615787a6"
     end
+
+    # Fix Eigen detection to work with Homebrew's Eigen formula
+    patch :DATA
   end
 
   resource "getfem" do
@@ -105,7 +109,7 @@ class Csound < Formula
   end
 
   def python3
-    which("python3.13")
+    which("python3.14")
   end
 
   def install
@@ -142,6 +146,7 @@ class Csound < Formula
       # https://github.com/csound/plugins/commit/0a95ad72b5eb0a81bc680c2ac04da9a7c220715b
       args = %W[
         -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+        -DCMAKE_CXX_STANDARD=17
         -DABLETON_LINK_HOME=#{buildpath}/ableton-link
         -DBUILD_ABLETON_LINK_OPCODES=ON
         -DBUILD_CHUA_OPCODES=ON
@@ -283,3 +288,39 @@ class Csound < Formula
                                           "-Djava.library.path=#{libexec}", "test"
   end
 end
+
+__END__
+diff --git a/cmake/Modules/FindEIGEN3.cmake b/cmake/Modules/FindEIGEN3.cmake
+index 9eec7b4..40c3af0 100644
+--- a/cmake/Modules/FindEIGEN3.cmake
++++ b/cmake/Modules/FindEIGEN3.cmake
+@@ -36,27 +36,8 @@ if(NOT Eigen3_FIND_VERSION)
+ endif(NOT Eigen3_FIND_VERSION)
+ 
+ macro(_eigen3_check_version)
+-  file(READ "${EIGEN3_INCLUDE_DIR}/Eigen/src/Core/util/Macros.h" _eigen3_version_header)
+-
+-  string(REGEX MATCH "define[ \t]+EIGEN_WORLD_VERSION[ \t]+([0-9]+)" _eigen3_world_version_match "${_eigen3_version_header}")
+-  set(EIGEN3_WORLD_VERSION "${CMAKE_MATCH_1}")
+-  string(REGEX MATCH "define[ \t]+EIGEN_MAJOR_VERSION[ \t]+([0-9]+)" _eigen3_major_version_match "${_eigen3_version_header}")
+-  set(EIGEN3_MAJOR_VERSION "${CMAKE_MATCH_1}")
+-  string(REGEX MATCH "define[ \t]+EIGEN_MINOR_VERSION[ \t]+([0-9]+)" _eigen3_minor_version_match "${_eigen3_version_header}")
+-  set(EIGEN3_MINOR_VERSION "${CMAKE_MATCH_1}")
+-
+-  set(EIGEN3_VERSION ${EIGEN3_WORLD_VERSION}.${EIGEN3_MAJOR_VERSION}.${EIGEN3_MINOR_VERSION})
+-  if(${EIGEN3_VERSION} VERSION_LESS ${Eigen3_FIND_VERSION})
+-    set(EIGEN3_VERSION_OK FALSE)
+-  else(${EIGEN3_VERSION} VERSION_LESS ${Eigen3_FIND_VERSION})
+-    set(EIGEN3_VERSION_OK TRUE)
+-  endif(${EIGEN3_VERSION} VERSION_LESS ${Eigen3_FIND_VERSION})
+-
+-  if(NOT EIGEN3_VERSION_OK)
+-
+-    message(STATUS "Eigen3 version ${EIGEN3_VERSION} found in ${EIGEN3_INCLUDE_DIR}, "
+-                   "but at least version ${Eigen3_FIND_VERSION} is required")
+-  endif(NOT EIGEN3_VERSION_OK)
++  set(EIGEN3_VERSION "5.0.1")
++  set(EIGEN3_VERSION_OK TRUE)
+ endmacro(_eigen3_check_version)
+ 
+ if (EIGEN3_INCLUDE_DIR)
